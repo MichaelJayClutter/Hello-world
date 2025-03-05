@@ -1,4 +1,3 @@
-
 #-------------------------------------------------------------------------------#
 #               Qodana analysis is configured by qodana.yaml file               #
 #             https://www.jetbrains.com/help/qodana/qodana-yaml.html            #
@@ -23,3 +22,33 @@ profile:
 #Specify Qodana linter for analysis (Applied in CI/CD pipeline)
 linter: jetbrains/qodana-python:latest
 fixesStrategy: apply
+
+name: Qodana Analysis
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  qodana:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Run Qodana
+        uses: JetBrains/qodana-action@v2021.2
+        with:
+          linter: jetbrains/qodana-python:latest
+          profile: qodana.recommended
+          fixes-strategy: apply
